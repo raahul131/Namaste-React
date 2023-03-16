@@ -58,3 +58,9 @@ File watcher algorithm - file watcher written in c++
 
 // to render the functional components
 root.render(<HeaderComponent />);
+
+
+
+Optional Chaining
+?. <- this is the optional chaining
+

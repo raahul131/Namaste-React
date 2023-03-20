@@ -1,27 +1,23 @@
-import { restaurantList } from "../config";
 import RestaurantCard from "./Restaurantcard";
 import { useEffect, useState } from "react";
 import Shimmer from "./shimmerui";
 import { Link } from "react-router-dom";
+import { filterdata } from "../../utilities/helper";
+import useOnline from "../../utilities/useOnline";
 
-
-function filterdata(searchText, restaurant) {
-  const filterData = restaurant.filter((restaurant) =>
-    restaurant?.data?.name?.toLowerCase()?.includes(searchText.toLowerCase())
-  );
-  return filterData;
-}
-
-// no key (not acceptable) <<<<<< index key << unique key (best practice)
 const Body = () => {
   const [allRestaurants, setAllRestaurants] = useState([]);
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
   const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
-    // API call
-    getRestaurants();
+    getRestaurants(); // API call
   }, []);
+
+  const isOnline  = useOnline();
+  if (!isOnline) {
+    return <h1>Offline, Plase check your internet connection!!</h1>;
+  }
 
   async function getRestaurants() {
     const data = await fetch(
@@ -29,15 +25,12 @@ const Body = () => {
     );
     const json = await data.json();
     console.log(json);
-    setAllRestaurants(json?.data?.cards[2]?.data?.data?.cards);
-    setFilteredRestaurants(json?.data?.cards[2]?.data?.data?.cards);
+    setAllRestaurants(json?.data?.cards[1]?.data?.data?.cards);
+    setFilteredRestaurants(json?.data?.cards[1]?.data?.data?.cards);
   }
 
   // not render component(Early return)
   if (!allRestaurants) return null;
-
-  // if (filteredRestaurants?.length === 0)
-  //   return <h1>No Restaurants Matches Your Filter!!!</h1>;
 
   return allRestaurants?.length === 0 ? (
     <Shimmer />
@@ -74,21 +67,6 @@ const Body = () => {
             </Link>
           );
         })}
-        {/* <restaurantCard {...restaurantList[0].data} />
-        <restaurantCard {...restaurantList[1].data} />
-        <restaurantCard {...restaurantList[2].data} />
-        <restaurantCard {...restaurantList[3].data} />
-        <restaurantCard {...restaurantList[4].data} />
-        <restaurantCard {...restaurantList[5].data} />
-        <restaurantCard {...restaurantList[6].data} />
-        <restaurantCard {...restaurantList[7].data} />
-        <restaurantCard {...restaurantList[8].data} />
-        <restaurantCard {...restaurantList[9].data} />
-        <restaurantCard {...restaurantList[10].data} />
-        <restaurantCard {...restaurantList[11].data} />
-        <restaurantCard {...restaurantList[12].data} />
-        <restaurantCard {...restaurantList[13].data} />
-        <restaurantCard {...restaurantList[14].data} /> */}
       </div>
     </>
   );

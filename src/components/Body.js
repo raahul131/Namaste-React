@@ -25,8 +25,8 @@ const Body = () => {
     );
     const json = await data.json();
     console.log(json);
-    setAllRestaurants(json?.data?.cards[1]?.data?.data?.cards);
-    setFilteredRestaurants(json?.data?.cards[1]?.data?.data?.cards);
+    setAllRestaurants(json?.data?.cards[0]?.data?.data?.cards);
+    setFilteredRestaurants(json?.data?.cards[0 ]?.data?.data?.cards);
   }
 
   // not render component(Early return)
@@ -36,10 +36,10 @@ const Body = () => {
     <Shimmer />
   ) : (
     <>
-      <div className="search-container">
+      <div className="search-container p-5 bg-pink-50 my-5 shadow-lg">
         <input
           type="text"
-          className="search-input"
+          className="focus:bg-yellow-100 p-2 m-2"
           placeholder="Search"
           value={searchText}
           onChange={(e) => {
@@ -47,7 +47,7 @@ const Body = () => {
           }}
         />
         <button
-          className="search-btn"
+          className="p-2 m-2 bg-blue-900 text-white rounded-md shadow-lg hover:bg-blue-500 "
           onClick={() => {
             const data = filterdata(searchText, allRestaurants);
             setFilteredRestaurants(data);
@@ -56,7 +56,7 @@ const Body = () => {
           Search
         </button>
       </div>
-      <div className="restaurant-list">
+      <div className="flex flex-wrap">
         {filteredRestaurants?.map((restaurant) => {
           return (
             <Link

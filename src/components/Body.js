@@ -1,20 +1,23 @@
 import RestaurantCard from "./Restaurantcard";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Shimmer from "./shimmerui";
 import { Link } from "react-router-dom";
 import { filterdata } from "../../utilities/helper";
 import useOnline from "../../utilities/useOnline";
+import UserContext from "../../utilities/UserContext";
 
 const Body = () => {
   const [allRestaurants, setAllRestaurants] = useState([]);
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
   const [searchText, setSearchText] = useState("");
 
+  const { user, setUser } = useContext(UserContext);
+
   useEffect(() => {
     getRestaurants(); // API call
   }, []);
 
-  const isOnline  = useOnline();
+  const isOnline = useOnline();
   if (!isOnline) {
     return <h1>Offline, Plase check your internet connection!!</h1>;
   }
@@ -25,8 +28,8 @@ const Body = () => {
     );
     const json = await data.json();
     console.log(json);
-    setAllRestaurants(json?.data?.cards[0]?.data?.data?.cards);
-    setFilteredRestaurants(json?.data?.cards[0 ]?.data?.data?.cards);
+    setAllRestaurants(json?.data?.cards[1]?.data?.data?.cards);
+    setFilteredRestaurants(json?.data?.cards[1]?.data?.data?.cards);
   }
 
   // not render component(Early return)
@@ -47,7 +50,7 @@ const Body = () => {
           }}
         />
         <button
-          className="p-2 m-2 bg-blue-900 text-white rounded-md shadow-lg hover:bg-blue-500 "
+          className="p-2 m-2 bg-purple-900 text-white rounded-md shadow-lg hover:bg-blue-500 "
           onClick={() => {
             const data = filterdata(searchText, allRestaurants);
             setFilteredRestaurants(data);
@@ -55,6 +58,15 @@ const Body = () => {
         >
           Search
         </button>
+        <input
+          value={user.name}
+          onChange={(e) =>
+            setUser({
+              name: e.target.value,
+              email: "newemail@gmail.com",
+            })
+          }
+        ></input>
       </div>
       <div className="flex flex-wrap">
         {filteredRestaurants?.map((restaurant) => {

@@ -9,17 +9,30 @@ import Contact from "./components/Contact";
 import Error from "./components/Error";
 import RestaurantMenu from "./components/RestaurantManu";
 import Profile from "./components/Profile";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState } from "react";
 import Shimmer from "./components/shimmerui";
+import UserContext from "../utilities/UserContext";
 
 const Instamart = lazy(() => import("./components/Instamart"));
 
 const AppLayout = () => {
+  const [user, setUser] = useState({
+    name: "Rahul Ray",
+    email: "rryadav2025@gmail.com",
+  });
+
   return (
     <>
-      <Header />
-      <Outlet />
-      <Footer />
+      <UserContext.Provider
+        value={{
+          user: user,
+          setUser: setUser,
+        }}
+      >
+        <Header />
+        <Outlet />
+        <Footer />
+      </UserContext.Provider>
     </>
   );
 };
